@@ -16,9 +16,27 @@ class Proxy
   def initialize(target_object)
     @object = target_object
     # ADD MORE CODE HERE
+    @messages = []
+    @number_of_times_called = Hash.new(0)
   end
 
+  attr_reader :messages
+
+
   # WRITE CODE HERE
+  def method_missing(m, *args, &block)
+    @messages << m
+    @number_of_times_called[m] += 1
+    @object.__send__(m, *args)
+  end
+
+  def called?(method_sym)
+    @messages.include? method_sym
+  end
+
+  def number_of_times_called(method_sym)
+    @number_of_times_called[method_sym]
+  end
 end
 
 # The proxy object should pass the following Koan:
